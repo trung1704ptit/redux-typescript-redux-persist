@@ -1,76 +1,127 @@
 // Packages
-import { useEffect } from 'react'
+import { EventHandler, useEffect, useLayoutEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
-import { Col } from 'styled-bootstrap-grid'
-import { ArrowRightShort } from 'react-bootstrap-icons'
-import _ from 'lodash'
-
-// Components
-// import Layout from '../components/Layout'
-import Input from '../components/Input'
-import Button from '../components/Button'
-
-// Style
+import { some, isEmpty } from 'lodash'
+import { toast } from 'react-toastify'
+import {
+  Box,
+  FormControlLabel,
+  FormGroup,
+  FormHelperText,
+  Typography,
+  Button,
+  TextField,
+  Grid,
+  Checkbox,
+} from '@mui/material'
 import { Container, SlimWrapper, VerticalBox } from '../styles/global'
 import { Background, FormWrapper, FormRow } from '../styles/index'
-import { Title } from '../styles/typography'
-
-// Redux Actions
 import { setLoading, updateField } from '../containers/FormContainer/actions'
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
+import { literal, object, string, TypeOf } from 'zod'
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import FormInput from '../components/FormInput'
+
+const registerSchema = object({
+  firstName: string()
+    .min(1, 'First name is required')
+    .max(100, 'First name must be less than 100 characters'),
+  lastName: string()
+    .min(1, 'Last name is required')
+    .max(100, 'Last name must be less than 100 characters'),
+  email: string().min(1, 'Email is required').email('Email is invalid'),
+  password: string()
+    .min(1, 'Password is required')
+    .min(8, 'Password must be more than 8 characters')
+    .max(32, 'Password must be less than 32 characters'),
+  passwordConfirm: string().min(1, 'Please confirm your password'),
+  terms: literal(true, {
+    invalid_type_error: 'Accept Terms is required',
+  }),
+}).refine((data) => data.password === data.passwordConfirm, {
+  path: ['passwordConfirm'],
+  message: 'Passwords do not match',
+})
+
+type RegisterInput = TypeOf<typeof registerSchema>
 
 export default function Home() {
-  const { form_values, loading } = useSelector((state) => state.form),
-    dispatch = useDispatch(),
-    router = useRouter(),
-    fields = [
-      {
-        col: 12,
-        lg: 6,
-        type: 'text',
-        label: 'First Name',
-        id: 'first_name',
-      },
-      {
-        col: 12,
-        lg: 6,
-        type: 'text',
-        label: 'Last Name',
-        id: 'last_name',
-      },
-      {
-        col: 12,
-        lg: 12,
-        type: 'email',
-        label: 'Email Address',
-        id: 'email_address',
-      },
-      {
-        col: 12,
-        lg: 12,
-        type: 'password',
-        label: 'Password',
-        id: 'password',
-      },
-    ]
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const fields = [
+    {
+      col: 12,
+      lg: 6,
+      type: 'text',
+      name: 'firstName',
+      label: 'First Name',
+      required: true,
+    },
+    {
+      col: 12,
+      lg: 6,
+      type: 'text',
+      name: 'lastName',
+      label: 'Last Name',
+      required: true,
+    },
+    {
+      col: 12,
+      lg: 12,
+      type: 'email',
+      name: 'email',
+      label: 'Email Address',
+      required: true,
+    },
+    {
+      col: 12,
+      lg: 12,
+      type: 'password',
+      name: 'password',
+      label: 'Password',
+      required: true,
+    },
+    {
+      col: 12,
+      lg: 12,
+      type: 'password',
+      name: 'passwordConfirm',
+      label: 'Password Confirm',
+      required: true,
+    },
+  ]
+
+  const [loading, setLoading] = useState(false)
+  const methods = useForm<RegisterInput>({
+    resolver: zodResolver(registerSchema),
+  })
+
+  const {
+    reset,
+    handleSubmit,
+    register,
+    formState: { isSubmitSuccessful, errors },
+  } = methods
 
   useEffect(() => {
-    dispatch(setLoading(false))
+    // reset form after submit successfully
+    if (isSubmitSuccessful) {
+      reset()
+    }
+  }, [isSubmitSuccessful])
+
+  useEffect(() => {
+    setLoading(false)
   }, [])
 
-  const onSubmit = () => {
-    const hasEmptyValues = _.some(form_values, _.isEmpty)
+  const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
+    console.log(values)
 
-    if (hasEmptyValues) {
-      // Alert user.
-      alert('Please enter all fields!')
-    } else {
-      dispatch(setLoading(true))
-
-      setTimeout(() => {
-        router.push('/greeting')
-      }, 3500)
-    }
+    setTimeout(() => {
+      router.push('/greeting')
+    }, 3500)
   }
 
   return (
@@ -91,35 +142,63 @@ export default function Home() {
         <SlimWrapper>
           <VerticalBox>
             <FormWrapper>
-              <Title style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                Create an account
-              </Title>
-              <FormRow alignItems="center" loading={loading ? 1 : 0}>
-                {fields.map(({ lg, col, type, label, id }) => (
-                  <Col col={col} lg={lg} key={label}>
-                    <Input
-                      type={type}
-                      label={label}
-                      value={form_values[id]}
-                      onChange={(event) => {
-                        dispatch(
-                          updateField({
-                            id,
-                            value: event.target.value,
-                          })
-                        )
-                      }}
+              <FormProvider {...methods}>
+                <Box
+                  component="form"
+                  noValidate
+                  autoComplete="off"
+                  onSubmit={handleSubmit(onSubmitHandler)}
+                >
+                  <Typography
+                    component="h4"
+                    variant="h4"
+                    sx={{ textAlign: 'center', mb: 2 }}
+                  >
+                    Create an account
+                  </Typography>
+                  <Grid container spacing={2} sx={{ mt: 2, mb: 3 }}>
+                    {fields.map(({ lg, col, type, label, required, name }) => (
+                      <Grid item xs={col} lg={lg} key={name}>
+                        <FormInput
+                          type={type}
+                          label={label}
+                          name={name}
+                          required={required}
+                          fullWidth={true}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox required />}
+                      {...register('terms')}
+                      label={
+                        <Typography
+                          color={errors['terms'] ? 'error' : 'inherit'}
+                        >
+                          Accept Terms and Conditions
+                        </Typography>
+                      }
                     />
-                  </Col>
-                ))}
-              </FormRow>
-              <Button
-                title={loading ? 'Submitting' : 'Sign up'}
-                onClick={onSubmit}
-                icon={<ArrowRightShort />}
-                loading={loading ? 1 : 0}
-                disabled={loading}
-              />
+                    <FormHelperText error={!!errors['terms']}>
+                      {errors['terms'] ? errors['terms'].message : ''}
+                    </FormHelperText>
+                  </FormGroup>
+
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    startIcon={<PersonAddAltIcon />}
+                    disabled={loading}
+                    fullWidth={true}
+                    size="large"
+                  >
+                    {loading ? 'Submitting' : 'Sign up'}
+                  </Button>
+                </Box>
+              </FormProvider>
             </FormWrapper>
           </VerticalBox>
         </SlimWrapper>

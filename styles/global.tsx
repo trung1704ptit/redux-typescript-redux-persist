@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import { styled } from '@mui/system'
 
-export const WideWrapper = styled.div`
+export const WideWrapper = styled('div')`
   margin-right: auto;
   margin-left: auto;
   max-width: 1366px;
@@ -9,7 +9,7 @@ export const WideWrapper = styled.div`
   width: 100%;
 `
 
-export const Wrapper = styled.div`
+export const Wrapper = styled('div')`
   margin-right: auto;
   margin-left: auto;
   max-width: 1140px;
@@ -18,7 +18,7 @@ export const Wrapper = styled.div`
   width: 100%;
 `
 
-export const SlimWrapper = styled.div`
+export const SlimWrapper = styled('div')`
   margin-right: auto;
   margin-left: auto;
   max-width: 640px;
@@ -27,7 +27,7 @@ export const SlimWrapper = styled.div`
   width: 100%;
 `
 
-export const Container = styled.div`
+export const Container = styled('div')`
   min-height: 100vh;
   padding: 0 0.5rem;
   display: flex;
@@ -37,7 +37,7 @@ export const Container = styled.div`
   height: 100vh;
 `
 
-export const VerticalBox = styled.div`
+export const VerticalBox = styled('div')`
   display: flex;
   flex-direction: column;
   width: 100%;

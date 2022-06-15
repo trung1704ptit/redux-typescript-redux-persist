@@ -5,24 +5,22 @@ import _ from 'lodash'
 
 // Components
 import Layout from '../components/Layout'
-import Button from '../components/Button'
 
 // Style
 import { Container, SlimWrapper, VerticalBox } from '../styles/global'
 import { Background, FormWrapper } from '../styles/index'
 import { Title } from '../styles/typography'
+import { Button } from '@mui/material'
 
 // Redux Actions
 import { resetFormValues } from '../containers/FormContainer/actions'
 
 export default function Home() {
-  const { first_name } = useSelector((state) => state.form.form_values),
+  const first_name = 'Trung',
     dispatch = useDispatch(),
     router = useRouter()
 
   const clearState = () => {
-    dispatch(resetFormValues())
-
     router.push('/')
   }
 
@@ -48,9 +46,8 @@ export default function Home() {
                 Howdy, {first_name} 👋
               </Title>
               <Button
-                title={`Not ${first_name}? Go back`}
                 onClick={clearState}
-              />
+              >{`Not ${first_name}? Go back`}</Button>
             </FormWrapper>
           </VerticalBox>
         </SlimWrapper>

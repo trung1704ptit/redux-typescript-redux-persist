@@ -1,5 +1,4 @@
-import styled from 'styled-components'
-import { Row } from 'styled-bootstrap-grid'
+import { styled } from '@mui/system'
 import { Gradient } from 'react-gradient'
 
 interface Props {
@@ -15,7 +14,7 @@ export const Background = styled(Gradient)`
   z-index: -1;
 `
 
-export const FormWrapper = styled.div`
+export const FormWrapper = styled('div')`
   background-color: white;
   flex: 1;
   min-height: 250px;
@@ -28,7 +27,7 @@ export const FormWrapper = styled.div`
     0 16px 32px rgba(0, 0, 0, 0.03), 0 32px 64px rgba(0, 0, 0, 0.03);
 `
 
-export const FormRow = styled(Row)<Props>`
+export const FormRow = styled('div')<Props>`
   max-height: ${(props) => (props.loading ? '0' : '600px')};
   overflow: hidden;
   transition: max-height 0.35s ease-in-out, opacity 0.35s ease-in-out;
