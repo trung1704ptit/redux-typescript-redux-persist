@@ -9,6 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/material": "^5.8.4",
+    "@mui/styles": "^5.8.4",
     "@types/lodash": "^4.14.173",
     "@types/redux-logger": "^3.0.9",
     "@types/styled-components": "^5.1.14",

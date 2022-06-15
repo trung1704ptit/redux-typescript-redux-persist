@@ -5,13 +5,13 @@ import { Provider } from 'react-redux'
 import store from '../store/configureStore'
 
 // Style
-import { BaseCSS } from 'styled-bootstrap-grid'
+import { CssBaseline } from "@mui/material";
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
-      <BaseCSS />
+      <CssBaseline />
       <Component {...pageProps} />
     </Provider>
   )

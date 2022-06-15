@@ -7,7 +7,7 @@ import { ArrowRightShort } from 'react-bootstrap-icons'
 import _ from 'lodash'
 
 // Components
-import Layout from '../components/Layout'
+// import Layout from '../components/Layout'
 import Input from '../components/Input'
 import Button from '../components/Button'
 
@@ -74,7 +74,7 @@ export default function Home() {
   }
 
   return (
-    <Layout title="Redux Sample Form">
+    <div>
       <Container>
         <Background
           gradients={[
@@ -124,6 +124,6 @@ export default function Home() {
           </VerticalBox>
         </SlimWrapper>
       </Container>
-    </Layout>
+    </div>
   )
 }
