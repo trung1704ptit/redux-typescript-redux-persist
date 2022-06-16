@@ -1,23 +1,18 @@
 // Packages
-import { EventHandler, useEffect, useLayoutEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
-import { some, isEmpty } from 'lodash'
-import { toast } from 'react-toastify'
 import {
   Box,
   FormControlLabel,
   FormGroup,
   FormHelperText,
   Typography,
-  Button,
-  TextField,
   Grid,
   Checkbox,
 } from '@mui/material'
+import LoadingButton from '@mui/lab/LoadingButton'
 import { Container, SlimWrapper, VerticalBox } from '../styles/global'
-import { Background, FormWrapper, FormRow } from '../styles/index'
-import { setLoading, updateField } from '../containers/FormContainer/actions'
+import { Background, FormWrapper } from '../styles/index'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
 import { literal, object, string, TypeOf } from 'zod'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
@@ -45,55 +40,55 @@ const registerSchema = object({
   message: 'Passwords do not match',
 })
 
+const fields = [
+  {
+    col: 12,
+    lg: 6,
+    type: 'text',
+    name: 'firstName',
+    label: 'First Name',
+    required: true,
+  },
+  {
+    col: 12,
+    lg: 6,
+    type: 'text',
+    name: 'lastName',
+    label: 'Last Name',
+    required: true,
+  },
+  {
+    col: 12,
+    lg: 12,
+    type: 'email',
+    name: 'email',
+    label: 'Email Address',
+    required: true,
+  },
+  {
+    col: 12,
+    lg: 12,
+    type: 'password',
+    name: 'password',
+    label: 'Password',
+    required: true,
+  },
+  {
+    col: 12,
+    lg: 12,
+    type: 'password',
+    name: 'passwordConfirm',
+    label: 'Password Confirm',
+    required: true,
+  },
+]
+
 type RegisterInput = TypeOf<typeof registerSchema>
 
 export default function Home() {
-  const dispatch = useDispatch()
   const router = useRouter()
-  const fields = [
-    {
-      col: 12,
-      lg: 6,
-      type: 'text',
-      name: 'firstName',
-      label: 'First Name',
-      required: true,
-    },
-    {
-      col: 12,
-      lg: 6,
-      type: 'text',
-      name: 'lastName',
-      label: 'Last Name',
-      required: true,
-    },
-    {
-      col: 12,
-      lg: 12,
-      type: 'email',
-      name: 'email',
-      label: 'Email Address',
-      required: true,
-    },
-    {
-      col: 12,
-      lg: 12,
-      type: 'password',
-      name: 'password',
-      label: 'Password',
-      required: true,
-    },
-    {
-      col: 12,
-      lg: 12,
-      type: 'password',
-      name: 'passwordConfirm',
-      label: 'Password Confirm',
-      required: true,
-    },
-  ]
-
   const [loading, setLoading] = useState(false)
+
   const methods = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
   })
@@ -102,26 +97,17 @@ export default function Home() {
     reset,
     handleSubmit,
     register,
-    formState: { isSubmitSuccessful, errors },
+    formState: { errors },
   } = methods
 
-  useEffect(() => {
-    // reset form after submit successfully
-    if (isSubmitSuccessful) {
-      reset()
-    }
-  }, [isSubmitSuccessful])
-
-  useEffect(() => {
-    setLoading(false)
-  }, [])
-
   const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    console.log(values)
-
+    console.log({ values })
+    setLoading(true);
     setTimeout(() => {
+      setLoading(false)
+      reset()
       router.push('/greeting')
-    }, 3500)
+    }, 2500)
   }
 
   return (
@@ -187,16 +173,18 @@ export default function Home() {
                     </FormHelperText>
                   </FormGroup>
 
-                  <Button
+                  <LoadingButton
                     variant="contained"
                     type="submit"
                     startIcon={<PersonAddAltIcon />}
                     disabled={loading}
                     fullWidth={true}
                     size="large"
+                    loading={loading}
+                    loadingPosition="start"
                   >
                     {loading ? 'Submitting' : 'Sign up'}
-                  </Button>
+                  </LoadingButton>
                 </Box>
               </FormProvider>
             </FormWrapper>
