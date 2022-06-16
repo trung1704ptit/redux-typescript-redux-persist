@@ -102,7 +102,7 @@ export default function Home() {
 
   const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
     console.log({ values })
-    setLoading(true);
+    setLoading(true)
     setTimeout(() => {
       setLoading(false)
       reset()

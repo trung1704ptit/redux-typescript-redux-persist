@@ -24,7 +24,7 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import Logo from './Logo'
 import navbarList from './navList'
 import StyledAvatar from './StyledAvatar'
-import Link from '@mui/material/Link'
+import Link from 'next/link'
 import Head from 'next/head'
 
 const drawerWidthOpen = 240
@@ -64,7 +64,7 @@ export default function SideNavbar({ children, title }: Props) {
 
   const drawerContent = (
     <>
-      <Link href="/" underline="none">
+      <Link href="/">
         <Box
           sx={{
             display: 'flex',
@@ -74,6 +74,7 @@ export default function SideNavbar({ children, title }: Props) {
             backgroundColor: 'transparent',
             margin: '14px 14px',
             borderBottom: '1px solid lightgray',
+            cursor: 'pointer',
           }}
         >
           <Box
@@ -128,7 +129,7 @@ export default function SideNavbar({ children, title }: Props) {
               <>
                 <Tooltip
                   title={open ? item.desc : ''}
-                  key={index}
+                  key={item.path}
                   placement={'right'}
                   componentsProps={{
                     tooltip: {
@@ -149,6 +150,7 @@ export default function SideNavbar({ children, title }: Props) {
                       borderRadius: '8px',
                       backgroundColor: '#26284687',
                     }}
+                    key={0}
                   >
                     <ListItemIcon sx={{ minWidth: '46px' }}>
                       <Badge
@@ -184,7 +186,7 @@ export default function SideNavbar({ children, title }: Props) {
               <Tooltip
                 title={open ? item.desc : ''}
                 placement={'right'}
-                key={index}
+                key={item.path}
                 componentsProps={{
                   tooltip: {
                     sx: {
@@ -196,53 +198,53 @@ export default function SideNavbar({ children, title }: Props) {
                   },
                 }}
               >
-                <ListItemButton
-                  sx={{
-                    margin: '2px 14px',
-                    padding: '10px',
-                    borderRadius: '8px',
-                    '&:hover': {
-                      backgroundColor: '#26284687',
-                    },
-                  }}
-                  component="a"
-                  href={item.path}
-                >
-                  <ListItemIcon sx={{ minWidth: '46px' }}>
-                    <Badge
-                      badgeContent={item.badge}
-                      color="secondary"
-                      variant="dot"
-                    >
-                      <item.icon
-                        sx={{ fontSize: '20px', color: 'lightgray' }}
-                      />
-                    </Badge>
-                  </ListItemIcon>
-
-                  <ListItemText
-                    primary={item.desc}
-                    primaryTypographyProps={{
-                      variant: 'body2',
-                    }}
+                <Link href={{ pathname: item.path }} key={item.path}>
+                  <ListItemButton
                     sx={{
-                      display: 'inline',
-                      margin: '0px',
-                      overflowX: 'hidden',
-                      color: 'lightgray',
-                      whiteSpace: 'nowrap',
-                      minWidth: '126px',
+                      margin: '2px 14px',
+                      padding: '10px',
+                      borderRadius: '8px',
+                      '&:hover': {
+                        backgroundColor: '#26284687',
+                      },
                     }}
-                  />
-                  {item.badge !== 0 ? (
-                    <Chip
-                      label={item.badge}
-                      color={'secondary'}
-                      size="small"
-                      sx={{ height: 'auto' }}
+                  >
+                    <ListItemIcon sx={{ minWidth: '46px' }}>
+                      <Badge
+                        badgeContent={item.badge}
+                        color="secondary"
+                        variant="dot"
+                      >
+                        <item.icon
+                          sx={{ fontSize: '20px', color: 'lightgray' }}
+                        />
+                      </Badge>
+                    </ListItemIcon>
+
+                    <ListItemText
+                      primary={item.desc}
+                      primaryTypographyProps={{
+                        variant: 'body2',
+                      }}
+                      sx={{
+                        display: 'inline',
+                        margin: '0px',
+                        overflowX: 'hidden',
+                        color: 'lightgray',
+                        whiteSpace: 'nowrap',
+                        minWidth: '126px',
+                      }}
                     />
-                  ) : null}
-                </ListItemButton>
+                    {item.badge !== 0 ? (
+                      <Chip
+                        label={item.badge}
+                        color={'secondary'}
+                        size="small"
+                        sx={{ height: 'auto' }}
+                      />
+                    ) : null}
+                  </ListItemButton>
+                </Link>
               </Tooltip>
             )}
           </>

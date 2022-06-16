@@ -25,7 +25,7 @@ export default function Home() {
   }
 
   return (
-    <Layout title="Welcome">
+    <Layout title="Redux Sample Form - Welcome">
       <Container>
         <Background
           gradients={[
