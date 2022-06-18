@@ -101,7 +101,6 @@ export default function Home() {
   } = methods
 
   const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    console.log({ values })
     setLoading(true)
     setTimeout(() => {
       setLoading(false)
